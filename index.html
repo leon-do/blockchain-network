@@ -2,6 +2,7 @@
 <head>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <style type="text/css">
         #mynetwork {
@@ -15,22 +16,102 @@
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
+
+init()
+
+async function init() {
+    const transactionData = await getTransactions('0x4156D3342D5c385a87D264F90653733592000581')
+    console.log('transactionData =', transactionData)
+
+    const dataSet = getNodeEdgeData(transactionData)
+    const nodeData = dataSet.node
+    console.log('nodeData =', nodeData)
+    const edgeData = dataSet.edge
+    console.log('edgeData =', edgeData)
+
+    displayData(nodeData, edgeData)
+}
+
+// gets data for var node 
+// get data for var edge
+// returns {node: node, edge: edge}
+// aka black magic
+function getNodeEdgeData(data) {
+    // stores unique 'from' addresses [{-_-}] ZZZzz zz z...
+    const unique = {}
+
+    /* 〜(￣▽￣〜)(〜￣▽￣)〜 */
+    const nodeArray = []
+    const edgeArray = []
+
+    // ◔_◔ loop ◔_◔
+    //const i in data
+    for (let i = 0; i < 100; i++ ) {
+
+        // called this because... http://visjs.org/docs/network/.          \ᇂ_ᇂ\
+        let id = data[i].from 
+        let label = 'ball'
+        let from = data[i].from
+        let to = data[i].to
+
+
+        // if id is unique aka ᶠᶸᶜᵏ♥ᵧₒᵤ undefined
+        if (unique[id] === undefined){
+
+            // add to unique (╯°□°）╯︵ ┻━┻)
+            unique[id] = id
+
+            // add a ☆(◒‿◒)☆ new node 
+            nodeArray.push({
+                id: id, 
+                label: label 
+            })
+
+            // add a connection (ㄒoㄒ)
+            edgeArray.push({
+                from: from, 
+                to: to 
+            })
+
+        } else {
+
+            // add a connection (≧o≦)
+            edgeArray.push({
+                from: from, 
+                to: to 
+            })
+
+        }
+    }
+
+    return {node: nodeArray, edge: edgeArray}
+}
+
+// https://etherscan.io/apis#accounts
+function getTransactions (contractAddress) {
+    return new Promise(resolve => {
+         // http://api.etherscan.io/api?module=account&action=txlist&address=0x6B9b8Ae3eCF242a214524dBAD07857Da47Fa40b1&startblock=0&endblock=99999999&sort=des
+        const uri = `http://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&sort=des`
+        console.log('uri = ', uri)
+        $.get(uri, function(response){
+            console.log('response = ', response)
+            resolve(response.result)
+        })       
+    })
+}
+
+
+
+
+function displayData(nodeData, edgeData) {
+
     // create an array with nodes
-    var nodes = new vis.DataSet([
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'}
-    ]);
+    var nodes = new vis.DataSet(nodeData);
+    console.log('nodeData =',nodeData)
 
     // create an array with edges
-    var edges = new vis.DataSet([
-        {from: 1, to: 3},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
-    ]);
+    var edges = new vis.DataSet(edgeData);
+    console.log('edgeData =',edgeData)
 
     // create a network
     var container = document.getElementById('mynetwork');
@@ -44,6 +125,10 @@
 
     // initialize your network!
     var network = new vis.Network(container, data, options);
+}
+
+
+
 </script>
 </body>
 </html>
