@@ -100,7 +100,7 @@ function getTransactions (contractAddress) {
          /*
          http://api.etherscan.io/api?module=account&action=txlist&address=0x6B9b8Ae3eCF242a214524dBAD07857Da47Fa40b1&startblock=0&endblock=99999999&sort=des
          */
-        const uri = `http://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&sort=des`
+        const uri = `https://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&sort=des`
         console.log('uri = ', uri)
         $.get(uri, function(response){
             console.log('response = ', response)
