@@ -59,12 +59,8 @@ function getNodeEdgeData(data) {
     const edgeArray = []
 
     // ◔_◔ loop ◔_◔
-    //display ~100 nodes
-    let length = 500
-    if (length > data.length){
-        length = data.length
-    }
-    for (let i = 0; i < 100; i++ ) {
+    //display nodes
+    for (let i = 0; i < data.length; i++ ) {
 
         // skip if
         if (data[i] === undefined || data[i].to === '') {
@@ -108,9 +104,9 @@ function getNodeEdgeData(data) {
 function getTransactions (contractAddress) {
     return new Promise(resolve => {
          /*
-         http://api.etherscan.io/api?module=account&action=txlist&address=0x6B9b8Ae3eCF242a214524dBAD07857Da47Fa40b1&startblock=0&endblock=99999999&sort=des
-         */
-        const uri = `https://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&sort=des`
+        http://api.etherscan.io/api?module=account&action=txlist&address=0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae&startblock=0&endblock=99999999&sort=asc&apikey=BMXZ621X81G1NMTDINJQ8KNBR2G7DQE9WM
+        */
+        const uri = `https://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=BMXZ621X81G1NMTDINJQ8KNBR2G7DQE9WM`
         console.log('uri = ', uri)
         $.get(uri, function(response){
             console.log('response = ', response)
