@@ -15,16 +15,22 @@
 <body>
 
 <div> ETH address </div>
-<input id='input' value='0x5873E7b7F909B4F76ce4B7B3338DB674F1aC3a02'>
+<input id='input' placeholder='0x120A270bbC009644e35F0bB6ab13f95b8199c4ad'>
 <button onclick="map()">Map</button>
 
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
 
-async function map() {
+$( document ).ready(function() {
+    map('0x120A270bbC009644e35F0bB6ab13f95b8199c4ad')
+})
 
-    const address = $('#input').val()
+async function map(address) {
+
+    if (!address) {
+        address = $('#input').val()
+    }
 
     const transactionData = await getTransactions(address)
     console.log('transactionData =', transactionData)
@@ -50,7 +56,7 @@ function getNodeEdgeData(data) {
 
     // ◔_◔ loop ◔_◔
     //const i in data
-    for (let i = 0; i < 10; i++ ) {
+    for (let i = 0; i < 1000; i++ ) {
 
         // skip if
         if (data[i].to === '') {
@@ -72,7 +78,7 @@ function getNodeEdgeData(data) {
             // add a ☆(◒‿◒)☆ new node 
             nodeArray.push({
                 id: id, 
-                label: label 
+                label: '.' 
             })
 
             // add a connection (ㄒoㄒ)
@@ -105,7 +111,9 @@ function getTransactions (contractAddress) {
 
 
 
-
+/*
+http://visjs.org/index.html#modules
+*/
 function displayData(nodeData, edgeData) {
 
     // create an array with nodes
@@ -124,7 +132,9 @@ function displayData(nodeData, edgeData) {
         nodes: nodes,
         edges: edges
     };
-    var options = {};
+    var options = {
+
+    };
 
     // initialize your network!
     var network = new vis.Network(container, data, options);
