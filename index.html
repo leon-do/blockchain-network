@@ -8,14 +8,13 @@
         #mynetwork {
             width: 100%;
             height: 100%;
-            border: 1px solid lightgray;
         }
     </style>
 </head>
 <body>
 
-<div> ETH address </div>
-<input id='input' placeholder='0x120A270bbC009644e35F0bB6ab13f95b8199c4ad'>
+<div> ETH address: </div>
+<input id='input' value='0x5873E7b7F909B4F76ce4B7B3338DB674F1aC3a02'>
 <button onclick="map()">Map</button>
 
 <div id="mynetwork"></div>
@@ -30,6 +29,7 @@ async function map(address) {
 
     if (!address) {
         address = $('#input').val()
+        console.log('address = ', address)
     }
 
     const transactionData = await getTransactions(address)
@@ -55,11 +55,15 @@ function getNodeEdgeData(data) {
     const edgeArray = []
 
     // ◔_◔ loop ◔_◔
-    //const i in data
-    for (let i = 0; i < 1000; i++ ) {
+    //display ~100 nodes
+    let length = 500
+    if (length > data.length){
+        length = data.length
+    }
+    for (let i = 0; i < 100; i++ ) {
 
         // skip if
-        if (data[i].to === '') {
+        if (data[i] === undefined || data[i].to === '') {
             continue
         }
 
@@ -78,7 +82,9 @@ function getNodeEdgeData(data) {
             // add a ☆(◒‿◒)☆ new node 
             nodeArray.push({
                 id: id, 
-                label: '.' 
+                label: id,
+                title: id, "group": Math.floor(Math.random()*4)
+                // label:'colorObject + highlight + hover', color: {background:'cyan', border:'blue',highlight:{background:'red',border:'blue'},hover:{background:'white',border:'red'}}
             })
 
             // add a connection (ㄒoㄒ)
@@ -132,12 +138,45 @@ function displayData(nodeData, edgeData) {
         nodes: nodes,
         edges: edges
     };
-    var options = {
 
-    };
+
+
+
+
+
+
+
+            var options = {
+                nodes: {
+                    shape: 'circle',
+                    size: 16,
+                    font: {
+                        size: 1, // px
+                    },
+                },
+                physics: {
+                    forceAtlas2Based: {
+                        gravitationalConstant: -26,
+                        centralGravity: 0.005,
+                        springLength: 230,
+                        springConstant: 0.18
+                    },
+                    maxVelocity: 146,
+                    solver: 'forceAtlas2Based',
+                    timestep: 0.35,
+                    stabilization: {iterations: 150}
+                },
+                edges: {
+                    smooth: {
+                        type: 'continuous'
+                    }
+                },
+            };
 
     // initialize your network!
     var network = new vis.Network(container, data, options);
+
+
 }
 
 
