@@ -6,20 +6,26 @@
 
     <style type="text/css">
         #mynetwork {
-            width: 600px;
-            height: 400px;
+            width: 100%;
+            height: 100%;
             border: 1px solid lightgray;
         }
     </style>
 </head>
 <body>
+
+<div> ETH address </div>
+<input id='input' value='0x5873E7b7F909B4F76ce4B7B3338DB674F1aC3a02'>
+<button onclick="map()">Map</button>
+
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
 
+async function map() {
 
-init('0x5873E7b7F909B4F76ce4B7B3338DB674F1aC3a02')
-async function init(address) {
+    const address = $('#input').val()
+
     const transactionData = await getTransactions(address)
     console.log('transactionData =', transactionData)
 
