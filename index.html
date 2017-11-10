@@ -17,17 +17,15 @@
 
 <script type="text/javascript">
 
-init()
 
-async function init() {
-    const transactionData = await getTransactions('0x4156D3342D5c385a87D264F90653733592000581')
+init('0x5873E7b7F909B4F76ce4B7B3338DB674F1aC3a02')
+async function init(address) {
+    const transactionData = await getTransactions(address)
     console.log('transactionData =', transactionData)
 
     const dataSet = getNodeEdgeData(transactionData)
     const nodeData = dataSet.node
-    console.log('nodeData =', nodeData)
     const edgeData = dataSet.edge
-    console.log('edgeData =', edgeData)
 
     displayData(nodeData, edgeData)
 }
@@ -46,16 +44,20 @@ function getNodeEdgeData(data) {
 
     // ◔_◔ loop ◔_◔
     //const i in data
-    for (let i = 0; i < 100; i++ ) {
+    for (let i = 0; i < 10; i++ ) {
+
+        // skip if
+        if (data[i].to === '') {
+            continue
+        }
 
         // called this because... http://visjs.org/docs/network/.          \ᇂ_ᇂ\
-        let id = data[i].from 
-        let label = 'ball'
+        let id = data[i].to 
+        let label = data[i].from
         let from = data[i].from
         let to = data[i].to
 
-
-        // if id is unique aka ᶠᶸᶜᵏ♥ᵧₒᵤ undefined
+        // if id is unique then create a node aka ᶠᶸᶜᵏ♥ᵧₒᵤ 
         if (unique[id] === undefined){
 
             // add to unique (╯°□°）╯︵ ┻━┻)
@@ -70,18 +72,11 @@ function getNodeEdgeData(data) {
             // add a connection (ㄒoㄒ)
             edgeArray.push({
                 from: from, 
-                to: to 
-            })
-
-        } else {
-
-            // add a connection (≧o≦)
-            edgeArray.push({
-                from: from, 
-                to: to 
+                to: to,
             })
 
         }
+
     }
 
     return {node: nodeArray, edge: edgeArray}
@@ -90,7 +85,9 @@ function getNodeEdgeData(data) {
 // https://etherscan.io/apis#accounts
 function getTransactions (contractAddress) {
     return new Promise(resolve => {
-         // http://api.etherscan.io/api?module=account&action=txlist&address=0x6B9b8Ae3eCF242a214524dBAD07857Da47Fa40b1&startblock=0&endblock=99999999&sort=des
+         /*
+         http://api.etherscan.io/api?module=account&action=txlist&address=0x6B9b8Ae3eCF242a214524dBAD07857Da47Fa40b1&startblock=0&endblock=99999999&sort=des
+         */
         const uri = `http://api.etherscan.io/api?module=account&action=txlist&address=${contractAddress}&sort=des`
         console.log('uri = ', uri)
         $.get(uri, function(response){
